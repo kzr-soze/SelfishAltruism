@@ -131,6 +131,12 @@ classdef Game22 < handle
             game.b_payoff = randi(100,2);
             game.state = rng;
         end
+        
+        function LeaderFollower(game,delta1,delta2)
+            
+            LFEnxn(a_payoff,b_payoff,delta1,delta2);
+            
+        end
             
             
             
