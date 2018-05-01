@@ -1,6 +1,6 @@
-function [] = Gameplay_LF(seed,rounds,delta1,delta2,a_dist,b_dist,n)
+function [trust,stack] = Gameplay_LF(seed,rounds,delta1,delta2,a_dist,b_dist,n)
 % Plays the leader follower version of the game 
-    clc;
+  %  clc;
     rng(seed);
     sum_opt = 0;
     sum_stack = 0;
@@ -30,18 +30,19 @@ function [] = Gameplay_LF(seed,rounds,delta1,delta2,a_dist,b_dist,n)
         poa_trust(k) = sum_opt/sum_trust;
         poa_stack(k) = sum_opt/sum_stack;
     end
-    x = linspace(1,rounds,rounds);
-    plot(x,poa_trust,x,poa_stack);
-    title(['PoA for Limited-Trust and Zero-Trust Leader-Follower ',num2str(rounds),' round game'])
-    xlabel('Rounds');
-    ylabel('PoA');
-    legend('PoA Limited-Trust','PoA Zero-Trust');
-    disp(['Probability of playing optimum, Zero-Trust: ',num2str(stack_opt_played/rounds)]);
-    disp(['Probability of playing optimum, Limited-Trust: ',num2str(trust_opt_played/rounds)]);
-    disp(['Approximate PoA of Zero-Trust: ',num2str(poa_stack(rounds))]);
-    disp(['Approximate PoA of Limited-Trust: ',num2str(poa_trust(rounds))]);
-    
-
+%     x = linspace(1,rounds,rounds);
+%     plot(x,poa_trust,x,poa_stack);
+%     title(['PoA for Limited-Trust and Zero-Trust Leader-Follower ',num2str(rounds),' round game'])
+%     xlabel('Rounds');
+%     ylabel('PoA');
+%     legend('PoA Limited-Trust','PoA Zero-Trust');
+%     disp(['Probability of playing optimum, Zero-Trust: ',num2str(stack_opt_played/rounds)]);
+%     disp(['Probability of playing optimum, Limited-Trust: ',num2str(trust_opt_played/rounds)]);
+%     disp(['Approximate PoA of Zero-Trust: ',num2str(max(poa_stack(rounds),poa_stack(rounds)^-1))]);
+%     disp(['Approximate PoA of Limited-Trust: ',num2str(max(poa_trust(rounds),poa_trust(rounds)^-1))]);
+%     
+    stack = (max(poa_stack(rounds),poa_stack(rounds)^-1));
+    trust = (max(poa_trust(rounds),poa_trust(rounds)^-1));
 
 end
 
