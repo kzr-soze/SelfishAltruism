@@ -1,25 +1,31 @@
-function [trust,stack] = Gameplay_LF(seed,rounds,delta1,delta2,a_dist,b_dist,n)
+function [naive_trust,knowledge_trust,stack] = Gameplay_LF(seed,rounds,delta1,delta2,a_dist,b_dist,n)
 % Plays the leader follower version of the game 
   %  clc;
     rng(seed);
     sum_opt = 0;
     sum_stack = 0;
-    sum_trust = 0;
-    trust_opt_played = 0;
+    sum_naive = 0;
+    sum_knowledge = 0;
+    naive_trust_opt_played = 0;
+    knowledge_trust_opt_played = 0;
     stack_opt_played = 0;
-    poa_trust = zeros(rounds,1);
+    
+    poa_naive_trust = zeros(rounds,1);
+    poa_knowledge_trust = zeros(rounds,1);
     poa_stack = zeros(rounds,1);
     for k = 1:rounds
         A = a_dist(n);
         B = b_dist(n);
-        [opt,stack,trust] = LFEnxn(A,B,delta1,delta2);
+        [opt,stack,naive_trust] = LFENaivenxn(A,B,delta1,delta2);
+        [~,knowledge_trust] = LFEKnowledgenxn(A,B,delta1,delta2);
 %         disp(A);
 %         disp(B);
         sum_opt = sum_opt + opt;
-        sum_trust = sum_trust + trust(3);
+        sum_naive = sum_naive + naive_trust(3);
         sum_stack = sum_stack + stack(3);
-        if(opt == trust(3))
-            trust_opt_played = trust_opt_played+1;
+        sum_knowledge = sum_knowledge + knowledge_trust(3);
+        if(opt == naive_trust(3))
+            naive_trust_opt_played = naive_trust_opt_played+1;
         end
         if(opt == stack(3))
             stack_opt_played = stack_opt_played+1;
@@ -27,8 +33,12 @@ function [trust,stack] = Gameplay_LF(seed,rounds,delta1,delta2,a_dist,b_dist,n)
 %             disp(A);
 %             disp(B);
         end
-        poa_trust(k) = sum_opt/sum_trust;
+        if(opt == knowledge_trust(3))
+            knowledge_trust_opt_played = knowledge_trust_opt_played + 1;
+        end
+        poa_naive_trust(k) = sum_opt/sum_naive;
         poa_stack(k) = sum_opt/sum_stack;
+        poa_knowledge_trust(k) = sum_opt/sum_knowledge;
     end
 %     x = linspace(1,rounds,rounds);
 %     plot(x,poa_trust,x,poa_stack);
@@ -42,7 +52,8 @@ function [trust,stack] = Gameplay_LF(seed,rounds,delta1,delta2,a_dist,b_dist,n)
 %     disp(['Approximate PoA of Limited-Trust: ',num2str(max(poa_trust(rounds),poa_trust(rounds)^-1))]);
 %     
     stack = (max(poa_stack(rounds),poa_stack(rounds)^-1));
-    trust = (max(poa_trust(rounds),poa_trust(rounds)^-1));
+    naive_trust = (max(poa_naive_trust(rounds),poa_naive_trust(rounds)^-1));
+    knowledge_trust = (max(poa_knowledge_trust(rounds),poa_knowledge_trust(rounds)^-1));
 
 end
 
