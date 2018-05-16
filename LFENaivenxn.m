@@ -1,6 +1,7 @@
-function [ soc_opt,stack,trust ] = LFENaivenxn( A,B,delta1,delta2)
+function [ soc_opt,stack,trust,drive ] = LFENaivenxn( A,B,delta1,delta2)
 % Finds the equilibrium of a leader follower game according to delta1 and
 % delta2, when player 1 has no knowledge of delta2
+% Also finds the equilibrium when driving towards the social optimum
     n = size(A,1);
     temp = A+B;
     soc_opt = max(temp(:));
@@ -25,6 +26,25 @@ function [ soc_opt,stack,trust ] = LFENaivenxn( A,B,delta1,delta2)
     
     stack_move2 = best_response(stack_move1);
     stack_payoff_total = A(stack_move1,stack_move2) + B(stack_move1,stack_move2);
+    
+    % Calculate the payoff of driving towards the optimum
+    drive_payoff_total = stack_payoff_total;
+    drive_move1 = stack_move1;
+    drive_move2 = stack_move2;
+    for i = 1:n
+        for j = 1:n
+            if ((temp(i,j) > drive_payoff_total) && (A(i,j) > stack_payoff1 - delta1) && ...
+                    (B(i,j) > stack_payoff2-delta2))
+                drive_payoff_total = temp(i,j);
+                drive_move1 = i;
+                drive_move2 = j;
+            end
+        end
+    end
+                
+            
+    
+    
     BR_payoffs = sortrows(BR_payoffs,-2);
     trust_move1 = stack_move1; % p1's move according to delta1
     count = 1;
@@ -72,6 +92,7 @@ function [ soc_opt,stack,trust ] = LFENaivenxn( A,B,delta1,delta2)
     
     trust = [trust_move1,trust_move2,trust_payoff_total];
     stack = [stack_move1,stack_move2,stack_payoff_total];
+    drive = [drive_move1,drive_move2,drive_payoff_total];
     
     
     
